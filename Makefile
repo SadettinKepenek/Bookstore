@@ -3,6 +3,10 @@ PSQL_CONTAINER_NAME := bookstore-db
 DB_USERNAME ?= postgres
 DB_NAME ?= postgres
 
+run-docker-compose:
+	echo "Starting Docker containers..."
+	docker-compose up -d
+
 migrate-book-db:
 	echo "Generating book migration..."
 	dotnet ef migrations add $(MIGRATION_NAME) --project ./Book.Infrastructure/Book.Infrastructure.csproj --startup-project ./BookStore.Api/BookStore.Api.csproj --context Book.Infrastructure.Persistent.EntityFrameworkCore.BookDbContext --configuration Debug --output-dir Migrations
@@ -18,3 +22,13 @@ update-book-db:
 update-order-db:
 	echo "Updating book database..."
 	dotnet ef database update --startup-project ./BookStore.Api --context OrderDbContext
+
+run-app:
+	echo "Running application..."
+	cd ./Bookstore.Api && dotnet run 
+
+run-tests:
+	echo "Running book unit tests..."
+	dotnet test ./Book.UnitTests/Book.UnitTests.csproj
+	echo "Running order unit tests..."
+	dotnet test ./Order.UnitTests/Order.UnitTests.csproj

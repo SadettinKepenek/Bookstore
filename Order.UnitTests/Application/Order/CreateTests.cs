@@ -3,6 +3,7 @@ using Moq;
 using Order.Application.Inputs;
 using Order.Application.Repositories;
 using Order.Application.Services;
+using Order.Domain.Enums;
 using Xunit;
 
 namespace Order.UnitTests.Application.Order;
@@ -36,11 +37,15 @@ public class CreateTests
         _orderUnitOfWork.Setup(x => x.SaveChangesAsync(CancellationToken.None)).ReturnsAsync(1);
 
         // Act
-        var result = await _orderService.CreateAsync(input, CancellationToken.None);
+         var id = await _orderService.CreateAsync(input, CancellationToken.None);
 
         // Assert
-        result.Should().Be(order.Id);
-        _orderRepository.Verify(x => x.Add(order), Times.Once);
+        _orderRepository.Verify(x => x.Add(It.Is<global::Order.Domain.Order>(y
+            => y.Quantity == order.Quantity &&
+               y.BookId == order.BookId &&
+               y.Status == OrderStatus.Pending &&
+               y.TotalPrice == order.TotalPrice && 
+               y.Id == id)), Times.Once);
         _orderUnitOfWork.Verify(x => x.SaveChangesAsync(CancellationToken.None), Times.Once);
     }
     
