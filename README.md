@@ -1,6 +1,6 @@
 # Getting Started
 
-This project provides a set of commands to help set up and run the application using Docker, build the necessary database migrations, and run the unit tests. Follow the steps below to get started with the project.
+This project provides a simple book store API. Follow the steps below to get started with the project.
 
 ## Prerequisites
 
